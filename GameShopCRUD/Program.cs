@@ -8,6 +8,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var app = builder.Build();
+        
+        const string getGameEndpointName = "GetGame";
 
         List<GameDto> games =
         [
@@ -39,8 +41,21 @@ public class Program
         ];
         
         app.MapGet("/games", () => games);
-        app.MapGet("/games/{id}", (int id) => games.Find(g => g.Id == id));
-        
+        app.MapGet("/games/{id}", (int id) => games.Find(g => g.Id == id))
+            .WithName(getGameEndpointName);
+        app.MapPost("games", (CreateGameDto createGameDto) =>
+        {
+            var game = new GameDto(
+                games.Count + 1,
+                createGameDto.Name,
+                createGameDto.Genre,
+                createGameDto.Price,
+                createGameDto.ReleaseDate
+            );
+            
+            games.Add(game);
+            return Results.CreatedAtRoute(getGameEndpointName, new { id = game.Id }, game);
+        });
         
         app.MapGet("/", () => "Hello World!");
 

@@ -6,3 +6,14 @@ GET http://localhost:5250/games
 
 ###
 GET http://localhost:5250/games/1
+
+###
+POST http://localhost:5250/games
+Content-Type: application/json
+
+{
+  "name": "Robocraft",
+  "genre": "Battle",
+  "price": 1200,
+  "releaseDate": "2012-06-21"
+}
